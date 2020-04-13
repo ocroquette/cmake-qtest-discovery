@@ -19,7 +19,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# This script is run as POST_BUILD steps added by QtTest.cmake. See there
+# This script is run as POST_BUILD step, added by QtTest.cmake. See there
 # for more information.
 #
 # v1.0

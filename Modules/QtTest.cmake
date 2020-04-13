@@ -59,7 +59,8 @@ function(qtest_discover_tests TARGET)
   )
 
   set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES
-    "${ctest_include_file}")
+    "${ctest_include_file}"
+  )
 endfunction()
 
 

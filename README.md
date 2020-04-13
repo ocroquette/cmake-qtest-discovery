@@ -7,10 +7,16 @@ Since version 3.10, CMake is able to retrieve the list of tests from a Google Te
 
 This repository contains similar modules for QTest, the Qt test framework.
 
+## Features
+These modules don't offer all the features that ```gtest_discover_tests``` do, but still the following:
+* tests skipped (using ```QSKIP()```) are reported as such
+* parameterized tests (["Data Driven Testing"](https://doc.qt.io/qt-5/qttestlib-tutorial2-example.html))
+
 ## Quick start guide
 
-* add the modules to your project
+* copy the modules from "Modules" into your project
 * include(QtTest)
 * call qtest_discover_tests on the test executable, for instance: ```qtest_discover_tests(my_qtest_exe)```
-* build "my_qtest_exe". This will run "my_qtest_exe -datatags" as a POST_BUILD action and pass the information to CMake
+* remove any call to ```add_test``` for this test executable
+* build "my_qtest_exe". This will run "my_qtest_exe -datatags" as a POST_BUILD action and pass the information to CMake using ```add_test()```
 * run ctest
