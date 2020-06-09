@@ -22,7 +22,7 @@
 # This script is run as POST_BUILD step, added by QtTest.cmake. See there
 # for more information.
 #
-# v1.0
+# v1.1
 #
 # Latest version is available from GitHub:
 # https://github.com/ocroquette/cmake-qtest-discovery
@@ -33,6 +33,7 @@ execute_process(
   COMMAND "${TEST_EXECUTABLE}" -datatags
   WORKING_DIR ${working_dir}
   OUTPUT_VARIABLE output_variable
+  TIMEOUT ${TEST_DISCOVERY_TIMEOUT}
   ERROR_VARIABLE error_variable
   RESULT_VARIABLE result_variable
 )
@@ -66,27 +67,35 @@ set(ctest_script_content)
 string(REPLACE "\n" ";" output_lines "${output_variable}")
 foreach(line ${output_lines})
   set(generated_name)
-  string(REGEX MATCH <regular_expression>
-       <output variable> <input> [<input>...])
   if(line MATCHES "^([^ ]*) ([^ ]*) (.*)$")
     # Line contains a data set name, like in:
     #   test_qttestdemo myParameterizedTest data set name 1
     #   test_qttestdemo myParameterizedTest data set name 2
     get_and_escape_parameters()
-    set(generated_name "${test_class}.${test_method}:${test_dataset_escaped}")
+    set(generated_name "${TEST_PREFIX}${test_class}.${test_method}:${test_dataset_escaped}${TEST_SUFFIX}")
     string(APPEND ctest_script_content "add_test(\"${generated_name}\" \"${TEST_EXECUTABLE}\" \"${test_method}:${test_dataset_escaped}\")\n")
   elseif(line MATCHES "^([^ ]*) ([^ ]*)$")
     # Line doesn't contain a data set name, like in:
     #   test_qttestdemo myFirstTest
     #   test_qttestdemo mySecondTest
     get_and_escape_parameters()
-    set(generated_name "${test_class}.${test_method}")
+    set(generated_name "${TEST_PREFIX}${test_class}.${test_method}${TEST_SUFFIX}")
     string(APPEND ctest_script_content "add_test(\"${generated_name}\" \"${TEST_EXECUTABLE}\" \"${test_method}\")\n")
   endif()
   if(generated_name)
     # Make ctest aware of tests skipped with QSKIP()
     #    SKIP   : test_qttestdemo::mySkippedTest() Example of skipped test
-    string(APPEND ctest_script_content "set_tests_properties(\"${generated_name}\" PROPERTIES SKIP_REGULAR_EXPRESSION \"SKIP   : \")\n")
+    string(APPEND ctest_script_content
+      "set_tests_properties(\"${generated_name}\" PROPERTIES SKIP_REGULAR_EXPRESSION \"SKIP   : \")\n"
+    )
+    # Set other properties
+    string(APPEND ctest_script_content
+      "set_tests_properties(\"${generated_name}\" PROPERTIES WORKING_DIRECTORY \"${TEST_WORKING_DIR}\")\n"
+    )
+    string(REPLACE ";" " " external_properties "${TEST_PROPERTIES}")
+    string(APPEND ctest_script_content
+      "set_tests_properties(\"${generated_name}\" PROPERTIES ${external_properties})\n"
+    )
   endif()
 endforeach()
 
