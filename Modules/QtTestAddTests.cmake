@@ -22,7 +22,7 @@
 # This script is run as POST_BUILD step, added by QtTest.cmake. See there
 # for more information.
 #
-# v1.1
+# v1.2
 #
 # Latest version is available from GitHub:
 # https://github.com/ocroquette/cmake-qtest-discovery

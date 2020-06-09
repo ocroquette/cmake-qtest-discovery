@@ -19,7 +19,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# v1.1
+# v1.2
 #
 # Latest version is available from GitHub:
 # https://github.com/ocroquette/cmake-qtest-discovery
@@ -106,14 +106,14 @@ function(qtest_discover_tests TARGET)
   add_custom_command(TARGET ${TARGET}
     POST_BUILD
     COMMAND "${CMAKE_COMMAND}"
-      -D "TEST_EXECUTABLE:FILEPATH=$<TARGET_FILE:${TARGET}>"
-      -D "CTEST_FILE:FILEPATH=${ctest_include_file}"
-      -D "TEST_PROPERTIES=${_PROPERTIES}"
-      -D "TEST_DISCOVERY_TIMEOUT=${_DISCOVERY_TIMEOUT}"
-      -D "TEST_PREFIX=${_TEST_PREFIX}"
-      -D "TEST_SUFFIX=${_TEST_SUFFIX}"
-      -D "TEST_WORKING_DIR=${_WORKING_DIRECTORY}"
-      -P "${_QTTEST_DISCOVER_TESTS_SCRIPT}"
+      -D "\"TEST_EXECUTABLE:FILEPATH=$<TARGET_FILE:${TARGET}>\""
+      -D "\"CTEST_FILE:FILEPATH=${ctest_include_file}\""
+      -D "\"TEST_PROPERTIES=${_PROPERTIES}\""
+      -D "\"TEST_DISCOVERY_TIMEOUT=${_DISCOVERY_TIMEOUT}\""
+      -D "\"TEST_PREFIX=${_TEST_PREFIX}\""
+      -D "\"TEST_SUFFIX=${_TEST_SUFFIX}\""
+      -D "\"TEST_WORKING_DIR=${_WORKING_DIRECTORY}\""
+      -P "\"${_QTTEST_DISCOVER_TESTS_SCRIPT}\""
     BYPRODUCTS "${ctest_include_file}"
   )
 
